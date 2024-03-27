@@ -1,5 +1,6 @@
 <?php
 require("connect-db.php");
+require("database-functions.php");
 ?>
 
 
@@ -18,9 +19,9 @@ require("connect-db.php");
   <div>  
     <h1>PHP: Form Handling</h1>
     <form action="login.php" method="post">     
-      Username: <input type="text" name="name" required /> <br/>
-      Password: <input type="password" name="pwd" required /> <br/>
-      <input type="submit" value="Submit" class="btn" />
+      Username: <input type="text" name="username" required /> <br/>
+      Password: <input type="password" name="password" required /> <br/>
+      <input type="submit" name="Submit" value="Submit" class="btn" />
     </form>
   </div>
 
@@ -33,15 +34,30 @@ require("connect-db.php");
 
 <?php
 
-// Stub function for validating username and password
+
+//STUB: should be able to have validate user function only in the database-functions file, but that is currently not working.
 function validateUser($username, $password) {
-    // Your validation logic here
-    // For demonstration purposes, return true if username and password are valid
-    return true;
+    global $db;
+    $query = 'SELECT password FROM Users WHERE user_id = :user_id';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':user_id', $username);
+    $statement->execute();
+    $result = $statement->fetch(); // Fetch the result row
+    $statement->closeCursor();
+
+    // Check if a row was returned
+    if ($result) {
+        // Compare the password from the database with the input password
+        $passwordFromDB = $result['password'];
+        if ($password === $passwordFromDB) {
+            return true; // Passwords match
+        }
+    }
+    return false; // User not found or password doesn't match
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if(isset($_POST["login"])) {
+    if (!empty($_POST['Submit'])) {
         $username = $_POST["username"];
         $password = $_POST["password"];
 
