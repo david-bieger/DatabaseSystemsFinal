@@ -17,11 +17,12 @@ require("database-functions.php");
 </head>
 <body>  
   <div>  
-    <h1>PHP: Form Handling</h1>
+    <h1>Gym Tracker</h1>
     <form action="login.php" method="post">     
       Username: <input type="text" name="username" required /> <br/>
       Password: <input type="password" name="password" required /> <br/>
       <input type="submit" name="Submit" value="Submit" class="btn" />
+      <input type="submit" name="create-account" value="Create Account" class="btn" /> 
     </form>
   </div>
 
@@ -69,5 +70,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             echo "Invalid username or password. Please try again.";
         }
     }
+    if (!empty($_POST['create-account'])) {
+      //redirect user to create-account.php
+      header("Location: http://localhost/cs4750/DatabaseSystemsFinal/create-account.php"); //use this to redirect to new files
+      exit;
+  }
 }
 ?>

@@ -31,7 +31,6 @@ input[type=submit] {
 input[type=submit]:hover {
   background-color: #ccceee;
 }
-    
 .msg {
   margin-left:24px;
   font-style: italic;
