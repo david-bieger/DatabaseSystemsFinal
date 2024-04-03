@@ -46,6 +46,8 @@ $dsn = "mysql:host=$host;dbname=$dbname";
 
 ////////////////////////////////////////////
 
+// This is a test comment from Kieran
+
 // To find a hostname, access phpMyAdmin
 // - select tob "User accounts"
 // - locate the username you created, by default, the Host name is localhost
