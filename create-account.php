@@ -59,6 +59,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             else {
                 addUserToDatabase($username, $password1, $name, $dob, $squatMax, $benchMax, $dlMax);
                 echo "Account successfully created.";
+                header("Location: http://localhost/cs4750/DatabaseSystemsFinal/login.php");
+                exit;
             }
             
         }

@@ -30,7 +30,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (validateUser($username, $password)) {
             // Redirect to success page or perform other actions
-            echo "Login successful!";
+            //echo "Login successful!";
+            header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
         } else {
             // Redirect back to login page with error message
             echo "Invalid username or password. Please try again.";
