@@ -47,22 +47,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>  
   <div>  
     <h1>Welcome <?php echo $username; ?> !</h1>
-    <form id="myProfile" action="home.php" method="post">     
+    <form id="myProfile" action="home.php" method="post">
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />     
       <input type="submit" name="myProfile" value="My Profile" class="btn" />
     </form>
     <form id="addExercise" action="home.php" method="post">     
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />
       <input type="submit" name="addExercise" value="Add Exercise" class="btn" />
     </form>
-    <form id="seeExercises" action="home.php" method="post">     
+    <form id="seeExercises" action="home.php" method="post">
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />     
       <input type="submit" name="seeExercises" value="See Past Exercises" class="btn" />
     </form>
-    <form id="mealHistory" action="home.php" method="post">     
+    <form id="mealHistory" action="home.php" method="post"> 
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />    
       <input type="submit" name="mealHistory" value="Meal History" class="btn" />
     </form>
-    <form id="addMeals" action="home.php" method="post">     
+    <form id="addMeals" action="home.php" method="post">   
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />  
       <input type="submit" name="addMeals" value="Add Meals" class="btn" />
     </form>
-    <form id="friends" action="home.php" method="post">     
+    <form id="friends" action="home.php" method="post">  
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />   
       <input type="submit" name="friends" value="Friends" class="btn" />
     </form>
   </div>
