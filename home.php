@@ -8,7 +8,7 @@ $username = $_GET['username'];
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['myProfile'])) {
         // Redirect to myProfile.php
-        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/myProfile.php?username=$username");
+        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/myProfile.php?username={$username}");
         exit;
     } elseif (isset($_POST['addExercise'])) {
         // Redirect to addExercise.php
