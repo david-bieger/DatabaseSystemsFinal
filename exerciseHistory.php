@@ -7,12 +7,19 @@ require("database-functions.php");
 //$userId = $_GET['userId'];
 $username = "David";
 
-$query = "SELECT * FROM Exercise_History WHERE user_id = :user_id";
+$query = "SELECT * FROM Exercise_History WHERE user_id = :user_id ORDER BY date DESC";
 $statement = $db->prepare($query);
-$statement->bindValue(':user_id', $userId);
+$statement->bindValue(':user_id', $username);
 $statement->execute();
 $exercises = $statement->fetchAll(PDO::FETCH_ASSOC);
 $statement->closeCursor();
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!empty($_POST['Home'])) {
+        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
+        exit();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +35,12 @@ $statement->closeCursor();
 <body>  
   <div>  
     <h1>Exercise History</h1>
+    <label for="exercise">Filter Exercises:</label>
+      <select name="exercise" id="exercise">
+        <?php foreach ($exercises as $exercise) : ?>
+          <option value="<?php echo $exercise['exercise']; ?>" <?php if(isset($selectedExercise) && $exercise['exercise'] == $selectedExercise) echo "selected"; ?>><?php echo $exercise['exercise']; ?></option>
+        <?php endforeach; ?>
+      </select>
     <?php if (count($exercises) > 0): ?>
     <table class="table">
       <thead>
@@ -43,7 +56,7 @@ $statement->closeCursor();
         <?php foreach ($exercises as $exercise): ?>
         <tr>
           <td><?php echo $exercise['date']; ?></td>
-          <td><?php echo $exercise['exercise_name']; ?></td>
+          <td><?php echo $exercise['exercise']; ?></td>
           <td><?php echo $exercise['set_number']; ?></td>
           <td><?php echo $exercise['weight']; ?></td>
           <td><?php echo $exercise['reps']; ?></td>
@@ -54,7 +67,11 @@ $statement->closeCursor();
     <?php else: ?>
     <p>No exercise history found for this user.</p>
     <?php endif; ?>
-  </div>
+    <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <input type="hidden" name="Home" value="true">
+        <input type="submit" value="Home" class="btn" />
+    </form>
+    </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     
