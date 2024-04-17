@@ -95,7 +95,7 @@ $exercises = get_exercise_names();
       <label for="exercise">Select an exercise:</label>
       <select name="exercise" id="exercise">
         <?php foreach ($exercises as $exercise) : ?>
-          <option value="<?php echo $exercise['exercise_name']; ?>"><?php echo $exercise['exercise_name']; ?></option>
+          <option value="<?php echo $exercise['exercise_name']; ?>" <?php if(isset($selectedExercise) && $exercise['exercise_name'] == $selectedExercise) echo "selected"; ?>><?php echo $exercise['exercise_name']; ?></option>
         <?php endforeach; ?>
       </select>
       <input type="submit" name="seeInfo" value="See Exercise Information" class="btn" />
