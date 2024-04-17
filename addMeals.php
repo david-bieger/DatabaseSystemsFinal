@@ -58,7 +58,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <div>  
     <h1>Add Meals</h1>
     <form id="addMealForm" action="addMeals.php" method="post">
-      Date: <input type="date" name="date" required /> <br/>     
+      Date: <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" /> <br/>
       Meal Number: <input type="number" name="meal_number" required /> <br/>
       Calories: <input type="number" name="calories" required /> <br/>
       Carbohydrates (g): <input type="number" name="carbohydrates" required /> <br/>

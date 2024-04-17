@@ -41,14 +41,15 @@ function get_exercise_muscles($name) {
     return $muscle;
 }
 
-function add_set($name, $date, $set_number, $weight, $reps) {
+function add_set($name, $exercise, $date, $set_number, $weight, $reps) {
     global $db;
-    $query = 'INSERT INTO Exercise_History (user_id, date, set_number, weight, reps) 
+    $query = 'INSERT INTO Exercise_History (user_id, exercise, date, set_number, weight, reps) 
     VALUES 
-    (:user_id, :date, :set_number, :weight, :reps)';
+    (:user_id, :exercise, :date, :set_number, :weight, :reps)';
     $statement = $db->prepare($query);
     $statement->bindValue(':user_id', $name);
     $statement->bindValue(':date', $date);
+    $statement->bindValue(':exercise', $exercise);
     $statement->bindValue(':set_number', $set_number);
     $statement->bindValue(':weight', $weight);
     $statement->bindValue(':reps', $reps);
@@ -59,19 +60,26 @@ function add_set($name, $date, $set_number, $weight, $reps) {
 
 // Handle form submissions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $selectedExercise = 0;
     if (isset($_POST["seeInfo"])) {
         if (!empty($_POST["exercise"])) {
             $selectedExercise = $_POST["exercise"];
             $description = get_exercise_description($selectedExercise);
             $muscles = get_exercise_muscles($selectedExercise);
         }
-    } elseif (isset($_POST["addSet"])) {
+    } if (isset($_POST["addSet"])) {
         $date = date("Y-m-d");
+        $exerciseName = 0;
+        if ($selectedExercise != 0) {
+            $exerciseName = $selectedExercise;
+        }
         $exerciseName = $_POST["exercise"];
         $weight = $_POST["weight"];
         $reps = $_POST["num_reps"];
+        $date = $_POST["date"];
+        $set_number = $_POST["set_number"];
         // You might want to add validation for $weight and $reps here
-        add_set($username, $date, 1, $weight, $reps); // For simplicity, assuming set_number as 1
+        add_set($username, $exerciseName, $date, $set_number, $weight, $reps); // For simplicity, assuming set_number as 1
     }
 }
 
@@ -111,6 +119,8 @@ $exercises = get_exercise_names();
       <br>
       <!-- Add input fields for adding sets -->
       <!-- You can use JavaScript to dynamically add more input fields for sets -->
+      Date: <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" /> <br/>
+      Set Number: <input type="number" name="set_number"  /> <br/>
       Weight: <input type="number" name="weight"  /> <br/>
       Number of Reps: <input type="number" name="num_reps" /> <br/>
       <input type="submit" name="addSet" value="Add Set" class="btn" />
