@@ -7,9 +7,50 @@ require("database-functions.php");
 //$userId = $_GET['userId'];
 $username = "David";
 
-$query = "SELECT * FROM Exercise_History WHERE user_id = :user_id ORDER BY date DESC";
+// Initialize variables
+$filterExercise = "";
+
+// Check if a filter is applied
+if (isset($_POST['exercise'])) {
+    $filterExercise = $_POST['exercise'];
+}
+
+// Check if a delete request is made
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
+    $deleteId = $_POST['delete_id'];
+    $exercise = $_POST['exercise'];
+    $date = $_POST['date'];
+    $set_number = $_POST['set_number'];
+    
+    $query = "DELETE FROM Exercise_History WHERE user_id = :user_id AND exercise = :exercise AND date = :date AND set_number = :set_number";
+    $statement = $db->prepare($query);
+    $statement->bindValue(':user_id', $username);
+    $statement->bindValue(':exercise', $exercise);
+    $statement->bindValue(':date', $date);
+    $statement->bindValue(':set_number', $set_number);
+    
+    // Execute the query and handle errors
+    if ($statement->execute()) {
+        echo "Row deleted successfully!";
+    } else {
+        echo "Error deleting row: " . $statement->errorInfo()[2];
+    }
+}
+
+
+$query = "SELECT * FROM Exercise_History WHERE user_id = :user_id";
+// Add WHERE clause if a filter is applied
+if (!empty($filterExercise)) {
+    $query .= " AND exercise = :exercise";
+}
+
+$query .= " ORDER BY date DESC";
 $statement = $db->prepare($query);
 $statement->bindValue(':user_id', $username);
+// Bind filter parameter if a filter is applied
+if (!empty($filterExercise)) {
+    $statement->bindValue(':exercise', $filterExercise);
+}
 $statement->execute();
 $exercises = $statement->fetchAll(PDO::FETCH_ASSOC);
 $statement->closeCursor();
@@ -35,12 +76,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>  
   <div>  
     <h1>Exercise History</h1>
-    <label for="exercise">Filter Exercises:</label>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+      <label for="exercise">Filter Exercises:</label>
       <select name="exercise" id="exercise">
-        <?php foreach ($exercises as $exercise) : ?>
-          <option value="<?php echo $exercise['exercise']; ?>" <?php if(isset($selectedExercise) && $exercise['exercise'] == $selectedExercise) echo "selected"; ?>><?php echo $exercise['exercise']; ?></option>
-        <?php endforeach; ?>
+        <option value="">All Exercises</option>
+        <?php
+        // Fetch distinct exercise names from the database
+        $query = "SELECT DISTINCT exercise FROM Exercise_History";
+        $statement = $db->prepare($query);
+        $statement->execute();
+        $exerciseNames = $statement->fetchAll(PDO::FETCH_COLUMN);
+        $statement->closeCursor();
+
+        // Display dropdown options
+        foreach ($exerciseNames as $exerciseName) {
+            $selected = ($filterExercise == $exerciseName) ? 'selected' : '';
+            echo "<option value='$exerciseName' $selected>$exerciseName</option>";
+        }
+        ?>
       </select>
+      <input type="submit" value="Apply Filter" class="btn" />
+    </form>
     <?php if (count($exercises) > 0): ?>
     <table class="table">
       <thead>
@@ -50,6 +106,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <th>Set Number</th>
           <th>Weight</th>
           <th>Reps</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -60,6 +117,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <td><?php echo $exercise['set_number']; ?></td>
           <td><?php echo $exercise['weight']; ?></td>
           <td><?php echo $exercise['reps']; ?></td>
+          <td>
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+                <input type="hidden" name="delete_id" value="<?php echo $exercise['user_id']; ?>">
+                <input type="hidden" name="exercise" value="<?php echo $filterExercise; ?>">
+                <input type="hidden" name="date" value="<?php echo $exercise['date']; ?>">
+                <input type="hidden" name="set_number" value="<?php echo $exercise['set_number']; ?>">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+          </td>
         </tr>
         <?php endforeach; ?>
       </tbody>
@@ -77,4 +143,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     
 </body>
 </html>
-
