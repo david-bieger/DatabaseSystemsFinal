@@ -81,6 +81,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // You might want to add validation for $weight and $reps here
         add_set($username, $exerciseName, $date, $set_number, $weight, $reps); // For simplicity, assuming set_number as 1
     }
+    if (!empty($_POST['Home'])) {
+        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
+        exit();
+    }
 }
 
 $exercises = get_exercise_names();
@@ -125,6 +129,12 @@ $exercises = get_exercise_names();
       Number of Reps: <input type="number" name="num_reps" /> <br/>
       <input type="submit" name="addSet" value="Add Set" class="btn" />
     </form>
+
+    <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <input type="hidden" name="Home" value="true">
+        <input type="submit" value="Home" class="btn" />
+    </form>
+    
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
