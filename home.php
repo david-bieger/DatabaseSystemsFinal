@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     } elseif (isset($_POST['seeExercises'])) {
         // Redirect to seeExercises.php
-        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/seeExercises.php?username=$username");
+        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/exerciseHistory.php?username=$username");
         exit;
     } elseif (isset($_POST['mealHistory'])) {
         // Redirect to mealHistory.php
