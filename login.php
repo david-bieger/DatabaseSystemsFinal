@@ -20,9 +20,11 @@ function validateUser($username, $password) {
             return true; // Passwords match
         }
     }
-    php echo "hello";
+    
     return false; // User not found or password doesn't match
 }
+
+echo "hi";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['Submit'])) {
