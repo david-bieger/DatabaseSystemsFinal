@@ -20,6 +20,7 @@ function validateUser($username, $password) {
             return true; // Passwords match
         }
     }
+    php echo "hello";
     return false; // User not found or password doesn't match
 }
 

@@ -34,6 +34,7 @@ function addUserToDatabase($username, $password, $name, $dob, $squatMax, $benchM
     $statement->bindValue(':dl_max', $dlMax); // Bind deadlift max
     $statement->execute();
     $statement->closeCursor();
+    //hello
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
