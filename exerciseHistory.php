@@ -16,20 +16,14 @@ if (isset($_POST['exercise'])) {
 }
 
 // Check if a delete request is made
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
-    $deleteId = $_POST['delete_id'];
-    $exercise = $_POST['exercise'];
-    $date = $_POST['date'];
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['set_number'])) {
     $set_number = $_POST['set_number'];
     
-    $query = "DELETE FROM Exercise_History WHERE user_id = :user_id AND exercise = :exercise AND date = :date AND set_number = :set_number";
+    $query = "DELETE FROM Exercise_History WHERE set_number = :set_number";
     $statement = $db->prepare($query);
-    $statement->bindValue(':user_id', $username);
-    $statement->bindValue(':exercise', $exercise);
-    $statement->bindValue(':date', $date);
+    $statement->bindValue(':set_number', $set_number);
     $statement->execute();
 }
-
 
 $query = "SELECT * FROM Exercise_History WHERE user_id = :user_id";
 // Add WHERE clause if a filter is applied
@@ -110,9 +104,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <td><?php echo $exercise['reps']; ?></td>
           <td>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                <input type="hidden" name="delete_id" value="<?php echo $exercise['user_id']; ?>">
-                <input type="hidden" name="exercise" value="<?php echo $exercise["exercise"]; ?>">
-                <input type="hidden" name="date" value="<?php echo $exercise['date']; ?>">
+                <input type="hidden" name="set_number" value="<?php echo $exercise['set_number']; ?>">
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
           </td>
@@ -131,5 +123,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     
-</body>
-</html>
+</
