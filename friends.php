@@ -4,8 +4,20 @@ require("connect-db.php");
 require("database-functions.php");
 
 // Assuming you get the user ID from the URL parameter
-//$username = $_GET['userId'];
-$username = "David";
+// Initialize username variable
+$username = "";
+
+// Check if a form is submitted, and if so, update $username
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (!empty($_POST['username'])) {
+      $username = $_POST['username'];
+  }
+} else {
+  // Check if the username is passed in the URL parameters
+  if(isset($_GET['username'])) {
+    $username = $_GET['username'];
+  }
+}
 
 // //Check if a delete request is made
 // if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -26,6 +38,7 @@ $statement->closeCursor();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['Home'])) {
+        $username = $_POST['username'];
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
         exit();
     }
@@ -71,8 +84,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <?php else: ?>
     <p>No friends found for this user.</p>
     <?php endif; ?>
-    <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <input type="hidden" name="Home" value="true">
+    <form id="home" action="http://localhost/cs4750/DatabaseSystemsFinal/home.php" method="get">
+        <!-- Pass the username as a query parameter -->
+        <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
         <input type="submit" value="Home" class="btn" />
     </form>
     </div>

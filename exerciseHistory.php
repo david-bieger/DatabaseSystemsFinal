@@ -3,15 +3,12 @@
 require("connect-db.php");
 require("database-functions.php");
 
-// Assuming you get the user ID from the URL parameter
-//$username = $_GET['userId'];
-$username = "David";
-
 // Initialize variables
 $filterExercise = "";
+$username = ""; // Initialize username variable
 
 // Check if a filter is applied
-if (isset($_POST['exercise'])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['exercise'])) {
     $filterExercise = $_POST['exercise'];
 }
 
@@ -24,6 +21,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['set_number'])) {
     $statement->bindValue(':set_number', $set_number);
     $statement->execute();
 }
+
+// Fetch username from GET or POST data
+$username = isset($_POST['username']) ? $_POST['username'] : $_GET['username'];
 
 $query = "SELECT * FROM Exercise_History WHERE user_id = :user_id";
 // Add WHERE clause if a filter is applied
@@ -44,6 +44,7 @@ $statement->closeCursor();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['Home'])) {
+        $username = $_POST['username'];
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
         exit();
     }
@@ -116,6 +117,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p>No exercise history found for this user.</p>
     <?php endif; ?>
     <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <!-- Use the username from PHP variable -->
+        <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
         <input type="hidden" name="Home" value="true">
         <input type="submit" value="Home" class="btn" />
     </form>

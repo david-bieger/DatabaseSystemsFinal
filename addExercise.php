@@ -3,9 +3,6 @@
 require("connect-db.php");
 require("database-functions.php");
 
-//$username = $_GET['username'];
-$username = "David";
-
 function get_exercise_names() {
     global $db;
 
@@ -53,37 +50,39 @@ function add_set($name, $exercise, $date, $weight, $reps) {
     $statement->bindValue(':weight', $weight);
     $statement->bindValue(':reps', $reps);
     $statement->execute();
-    //$result = $statement->fetch(); // Fetch the result row
     $statement->closeCursor();
 }
 
 // Handle form submissions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $selectedExercise = 0;
-    if (isset($_POST["seeInfo"])) {
-        if (!empty($_POST["exercise"])) {
-            $selectedExercise = $_POST["exercise"];
-            $description = get_exercise_description($selectedExercise);
-            $muscles = get_exercise_muscles($selectedExercise);
-        }
-    } if (isset($_POST["addSet"])) {
-        $date = date("Y-m-d");
-        $exerciseName = 0;
-        if ($selectedExercise != 0) {
-            $exerciseName = $selectedExercise;
-        }
-        $exerciseName = $_POST["exercise"];
-        $weight = $_POST["weight"];
-        $reps = $_POST["num_reps"];
-        $date = $_POST["date"];
-        // You might want to add validation for $weight and $reps here
-        add_set($username, $exerciseName, $date, $weight, $reps); // For simplicity, assuming set_number as 1
-    }
-    if (!empty($_POST['Home'])) {
-        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
-        exit();
-    }
-}
+  $username = isset($_POST['username']) ? $_POST['username'] : $_GET['username'];
+
+  $selectedExercise = 0;
+  if (isset($_POST["seeInfo"])) {
+      if (!empty($_POST["exercise"])) {
+          $selectedExercise = $_POST["exercise"];
+          $description = get_exercise_description($selectedExercise);
+          $muscles = get_exercise_muscles($selectedExercise);
+      }
+  } elseif (isset($_POST["addSet"])) {
+      $date = date("Y-m-d");
+      $exerciseName = isset($_POST["exercise"]) ? $_POST["exercise"] : 0;
+      $weight = isset($_POST["weight"]) ? $_POST["weight"] : 0;
+      $reps = isset($_POST["num_reps"]) ? $_POST["num_reps"] : 0;
+      // You might want to add validation for $weight and $reps here
+      add_set($username, $exerciseName, $date, $weight, $reps); // For simplicity, assuming set_number as 1
+  }
+  if (!empty($_POST['Home'])) {
+      // Use the username from the form input value
+      $username = $_POST['username'];
+      header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
+      exit();
+  }
+} 
+else {
+  // If it's not a POST request, use the username from the GET data
+  $username = $_GET['username'];
+  }
 
 $exercises = get_exercise_names();
 ?>
@@ -124,10 +123,13 @@ $exercises = get_exercise_names();
       Date: <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" /> <br/>
       Weight: <input type="number" name="weight"  /> <br/>
       Number of Reps: <input type="number" name="num_reps" /> <br/>
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />
       <input type="submit" name="addSet" value="Add Set" class="btn" />
     </form>
 
     <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <!-- Use the username from PHP variable -->
+        <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
         <input type="hidden" name="Home" value="true">
         <input type="submit" value="Home" class="btn" />
     </form>

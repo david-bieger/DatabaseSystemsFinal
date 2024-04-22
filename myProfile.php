@@ -33,6 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: myprofile.php?username=$username");
         exit;
     }
+    if (!empty($_POST['Home'])) {
+      $username = $_POST['username'];
+      header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
+      exit();
+    }
 }
 ?>
 
@@ -54,6 +59,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       Bench Max: <input type="number" name="bench_max" value="<?php echo $user['bench_max']; ?>" required /> <br/> 
       Deadlift Max: <input type="number" name="dl_max" value="<?php echo $user['dl_max']; ?>" required /> <br/> 
       <input type="submit" name="submit" value="Save Changes" class="btn" />
+    </form>
+    <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
+        <input type="hidden" name="Home" value="true">
+        <input type="submit" value="Home" class="btn" />
     </form>
   </div>
 
