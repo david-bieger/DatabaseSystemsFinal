@@ -4,10 +4,11 @@ require("database-functions.php");
 
 $username = $_GET['username'];
 //$username = urlencode($username)
-echo "$username";
-
+//echo "$username";
+echo "Redirect URL: http://localhost/cs4750/DatabaseSystemsFinal/myProfile.php?username=$username";
 // Handle form submissions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  //$username = $_GET['username'];
     if (isset($_POST['myProfile'])) {
         // Redirect to myProfile.php
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/myProfile.php?username=$username");
