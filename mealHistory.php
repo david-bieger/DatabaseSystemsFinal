@@ -5,15 +5,11 @@ require("database-functions.php");
 $username = "David";
 
 // Check if a delete request is made
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
-    $deleteId = $_POST['delete_id'];
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['meal_number'])) {
     $meal_number = $_POST['meal_number'];
-    $date = $_POST['date'];
     
-    $query = "DELETE FROM Meal_History WHERE user_id = :user_id AND date = :date AND meal_number = :meal_number";
+    $query = "DELETE FROM Meal_History WHERE meal_number = :meal_number";
     $statement = $db->prepare($query);
-    $statement->bindValue(':user_id', $username);
-    $statement->bindValue(':date', $date);
     $statement->bindValue(':meal_number', $meal_number);
     $statement->execute();
 }
@@ -61,9 +57,7 @@ $statement->closeCursor();
           <td><?php echo $meal['fat']; ?></td>
           <td>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-                <input type="hidden" name="delete_id" value="<?php echo $meal['user_id']; ?>">
                 <input type="hidden" name="meal_number" value="<?php echo $meal["meal_number"]; ?>">
-                <input type="hidden" name="date" value="<?php echo $meal['date']; ?>">
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
           </td>
