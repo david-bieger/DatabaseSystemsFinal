@@ -3,8 +3,8 @@
 require("connect-db.php");
 require("database-functions.php");
 
-//$username = $_GET['username'];
-$username = "David";
+$username = $_GET['username'];
+//$username = "David";
 
 function get_exercise_names() {
     global $db;

@@ -4,8 +4,8 @@ require("connect-db.php");
 require("database-functions.php");
 
 // Assuming you get the user ID from the URL parameter
-//$userId = $_GET['userId'];
-$username = "David";
+$username = $_GET['userId'];
+//$username = "David";
 
 // Initialize variables
 $filterExercise = "";
