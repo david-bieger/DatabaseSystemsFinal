@@ -28,13 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
     $statement->bindValue(':exercise', $exercise);
     $statement->bindValue(':date', $date);
     $statement->bindValue(':set_number', $set_number);
-    
-    // Execute the query and handle errors
-    if ($statement->execute()) {
-        echo "Row deleted successfully!";
-    } else {
-        echo "Error deleting row: " . $statement->errorInfo()[2];
-    }
+    $statement->execute();
 }
 
 
@@ -120,7 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <td>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
                 <input type="hidden" name="delete_id" value="<?php echo $exercise['user_id']; ?>">
-                <input type="hidden" name="exercise" value="<?php echo $filterExercise; ?>">
+                <input type="hidden" name="exercise" value="<?php echo $exercise["exercise"]; ?>">
                 <input type="hidden" name="date" value="<?php echo $exercise['date']; ?>">
                 <input type="hidden" name="set_number" value="<?php echo $exercise['set_number']; ?>">
                 <button type="submit" class="btn btn-danger">Delete</button>
