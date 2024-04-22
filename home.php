@@ -3,39 +3,44 @@ require("connect-db.php");
 require("database-functions.php");
 
 $username = $_GET['username'];
-//$username = urlencode($username)
-//echo "$username";
-echo "Redirect URL: http://localhost/cs4750/DatabaseSystemsFinal/myProfile.php?username=$username";
+
+
 // Handle form submissions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  //$username = $_GET['username'];
     if (isset($_POST['myProfile'])) {
+        $username = $_POST['username'];
         // Redirect to myProfile.php
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/myProfile.php?username=$username");
         exit;
     } elseif (isset($_POST['addExercise'])) {
+        $username = $_POST['username'];
         // Redirect to addExercise.php
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/addExercise.php?username=$username");
         exit;
     } elseif (isset($_POST['seeExercises'])) {
+      $username = $_POST['username'];
         // Redirect to seeExercises.php
-        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/exerciseHistory.php?username=$username");
+        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/seeExercises.php?username=$username");
         exit;
     } elseif (isset($_POST['mealHistory'])) {
+      $username = $_POST['username'];
         // Redirect to mealHistory.php
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/mealHistory.php?username=$username");
         exit;
     } elseif (isset($_POST['addMeals'])) {
+      $username = $_POST['username'];
         // Redirect to addMeals.php
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/addMeals.php?username=$username");
         exit;
     } elseif (isset($_POST['friends'])) {
+      $username = $_POST['username'];
         // Redirect to friends.php
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/friends.php?username=$username");
         exit;
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>
