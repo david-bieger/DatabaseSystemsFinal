@@ -4,8 +4,8 @@ require("connect-db.php");
 require("database-functions.php");
 
 // Assuming you get the user ID from the URL parameter
-$username = $_GET['userId'];
-//$username = "David";
+//$username = $_GET['userId'];
+$username = "David";
 
 // Initialize variables
 $filterExercise = "";
@@ -27,7 +27,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['delete_id'])) {
     $statement->bindValue(':user_id', $username);
     $statement->bindValue(':exercise', $exercise);
     $statement->bindValue(':date', $date);
-    $statement->bindValue(':set_number', $set_number);
     $statement->execute();
 }
 
@@ -97,7 +96,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <tr>
           <th>Date</th>
           <th>Exercise</th>
-          <th>Set Number</th>
           <th>Weight</th>
           <th>Reps</th>
           <th>Action</th>
@@ -108,7 +106,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <tr>
           <td><?php echo $exercise['date']; ?></td>
           <td><?php echo $exercise['exercise']; ?></td>
-          <td><?php echo $exercise['set_number']; ?></td>
           <td><?php echo $exercise['weight']; ?></td>
           <td><?php echo $exercise['reps']; ?></td>
           <td>
@@ -116,7 +113,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <input type="hidden" name="delete_id" value="<?php echo $exercise['user_id']; ?>">
                 <input type="hidden" name="exercise" value="<?php echo $exercise["exercise"]; ?>">
                 <input type="hidden" name="date" value="<?php echo $exercise['date']; ?>">
-                <input type="hidden" name="set_number" value="<?php echo $exercise['set_number']; ?>">
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
           </td>

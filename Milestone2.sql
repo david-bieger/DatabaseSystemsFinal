@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS Exercise_History (
     user_id VARCHAR(255),
     exercise VARCHAR(255),
     date DATE,
-    set_number INT,
+    set_number INT AUTO_INCREMENT,
     weight INT,
     reps INT,
     CONSTRAINT CHK_Valid CHECK (weight > 0 AND reps > 0),
@@ -64,7 +64,7 @@ CREATE TABLE IF NOT EXISTS User_goals (
 CREATE TABLE IF NOT EXISTS Meal_History (
     user_id VARCHAR(255),
     date DATE,
-    meal_number INT,
+    meal_number INT AUTO_INCREMENT,
     calories INT,
     CHECK (calories>0),
     carbs INT,
@@ -173,45 +173,6 @@ VALUES
 ('Strength', 'Squat'),
 ('Endurance', 'Bench Press'),
 ('Flexibility', 'Deadlift');
-
--- Populate sample data into User_goals table
-INSERT INTO User_goals (user_id, goal_type, exercise, target_date, goal_value) 
-VALUES 
-('1', 'Strength', 'Squat', '2024-05-01', 250),
-('2', 'Endurance', 'Bench Press', '2024-06-01', 200),
-('3', 'Flexibility', 'Deadlift', '2024-04-01', 300);
-
--- Populate sample data into Meal_History table
-INSERT INTO Meal_History (user_id, date, meal_number, calories, carbs, protein, fat) 
-VALUES 
-('1', '2024-03-18', 1, 1500, 200, 100, 50),
-('1', '2024-03-18', 2, 1100, 160, 70, 20),
-('2', '2024-03-18', 1, 1800, 250, 120, 60),
-('3', '2024-03-19', 1, 1600, null, null, null),
-('3', '2024-03-19', 2, 1250, null, null, null),
-('3', '2024-03-20', 1, 1100, null, null, null),
-('3', '2024-03-20', 2, 850, null, null, null),
-('3', '2024-03-20', 3, 850, null, null, null);
-
--- Populate sample data into Favorite_Exercises table
-INSERT INTO Favorite_Exercises (user_id, exercise_name) 
-VALUES 
-('1', 'Squat'),
-('2', 'Bench Press'),
-('3', 'Deadlift');
-
--- Populate sample data into friends table
-INSERT INTO friends (user_id1, user_id2) 
-VALUES 
-('1', '2'),
-('2', '3'),
-('3', '1');
-
--- Populate sample data into friend_requests table
-INSERT INTO friend_requests (user_id1, user_id2) 
-VALUES 
-('1', '3'),
-('3', '2');
 
 
 -- Create Stored Procedure to calculate average calories consumed per day by a user within a date range which will be made to a graph 

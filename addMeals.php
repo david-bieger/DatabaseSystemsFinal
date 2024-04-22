@@ -5,15 +5,14 @@ require("database-functions.php");
 //$username = $_GET['username'];
 
 $username = "David";
-function addMeal($username, $date, $meal_number, $calories, $carbs, $protein, $fat) {
+function addMeal($username, $date, $calories, $carbs, $protein, $fat) {
     global $db;
-    $query = 'INSERT INTO Meal_History (user_id, date, meal_number, calories, carbs, protein, fat) 
+    $query = 'INSERT INTO Meal_History (user_id, date, calories, carbs, protein, fat) 
     VALUES 
-    (:user_id, :meal_date, :meal_number, :calories, :carbs, :protein, :fat)';
+    (:user_id, :meal_date, :calories, :carbs, :protein, :fat)';
     $statement = $db->prepare($query);
     $statement->bindValue(':user_id', $username);
     $statement->bindValue(':meal_date', $date);
-    $statement->bindValue(':meal_number', $meal_number);
     $statement->bindValue(':calories', $calories);
     $statement->bindValue(':carbs', $carbs);
     $statement->bindValue(':protein', $protein);
@@ -27,13 +26,12 @@ function addMeal($username, $date, $meal_number, $calories, $carbs, $protein, $f
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['Submit'])) {
         $date = $_POST['date'];
-        $meal_number = $_POST['meal_number'];
         $calories = $_POST["calories"];
         $protein = $_POST["protein"];
         $fat = $_POST["fat"];
         $carbs = $_POST["carbohydrates"];
 
-        addMeal($username, $date,  $meal_number, $calories, $carbs, $protein, $fat);
+        addMeal($username, $date, $calories, $carbs, $protein, $fat);
         
     }
     if (!empty($_POST['Home'])) {
@@ -59,7 +57,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h1>Add Meals</h1>
     <form id="addMealForm" action="addMeals.php" method="post">
       Date: <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" /> <br/>
-      Meal Number: <input type="number" name="meal_number" required /> <br/>
       Calories: <input type="number" name="calories" required /> <br/>
       Carbohydrates (g): <input type="number" name="carbohydrates" required /> <br/>
       Protein (g): <input type="number" name="protein" required /> <br/>
