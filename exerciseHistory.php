@@ -16,6 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['exercise'])) {
 // Check if a delete request is made
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['set_number'])) {
     $set_number = $_POST['set_number'];
+    $username = $_POST['username'];
     
     $query = "DELETE FROM Exercise_History WHERE set_number = :set_number";
     $statement = $db->prepare($query);
@@ -106,8 +107,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <td><?php echo $exercise['weight']; ?></td>
           <td><?php echo $exercise['reps']; ?></td>
           <td>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
                 <input type="hidden" name="set_number" value="<?php echo $exercise['set_number']; ?>">
+                <input type="hidden" name="username" value="<?php echo $username; ?>" />
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
           </td>

@@ -37,6 +37,7 @@ function addMeal($username, $date, $calories, $carbs, $protein, $fat) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['Submit'])) {
+        $username = $_POST['username'];
         $date = $_POST['date'];
         $calories = $_POST["calories"];
         $protein = $_POST["protein"];
@@ -80,12 +81,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>  
   <div>  
     <h1>Add Meals</h1>
-    <form id="addMealForm" action="addMeals.php" method="post">
+    <form id="addMealForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
       Date: <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" /> <br/>
       Calories: <input type="number" name="calories" required /> <br/>
       Carbohydrates (g): <input type="number" name="carbohydrates" required /> <br/>
       Protein (g): <input type="number" name="protein" required /> <br/>
       Fat (g): <input type="number" name="fat" required /> <br/>
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />
       <input type="submit" name="Submit" value="Submit" class="btn" />
     </form>
 

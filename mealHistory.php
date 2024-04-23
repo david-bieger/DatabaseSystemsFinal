@@ -20,6 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 // Check if a delete request is made
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['meal_number'])) {
     $meal_number = $_POST['meal_number'];
+    $username = $_POST['username'];
     
     $query = "DELETE FROM Meal_History WHERE meal_number = :meal_number";
     $statement = $db->prepare($query);
@@ -77,8 +78,9 @@ $statement->closeCursor();
           <td><?php echo $meal['protein']; ?></td>
           <td><?php echo $meal['fat']; ?></td>
           <td>
-            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
                 <input type="hidden" name="meal_number" value="<?php echo $meal["meal_number"]; ?>">
+                <input type="hidden" name="username" value="<?php echo $username; ?>" />
                 <button type="submit" class="btn btn-danger">Delete</button>
             </form>
           </td>
