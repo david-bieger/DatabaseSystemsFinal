@@ -3,9 +3,6 @@
 require("connect-db.php");
 require("database-functions.php");
 
-//$username = $_GET['username'];
-$username = "David";
-
 function get_exercise_names() {
     global $db;
 
@@ -41,47 +38,51 @@ function get_exercise_muscles($name) {
     return $muscle;
 }
 
-function add_set($name, $exercise, $date, $set_number, $weight, $reps) {
+function add_set($name, $exercise, $date, $weight, $reps) {
     global $db;
-    $query = 'INSERT INTO Exercise_History (user_id, exercise, date, set_number, weight, reps) 
+    $query = 'INSERT INTO Exercise_History (user_id, exercise, date, weight, reps) 
     VALUES 
-    (:user_id, :exercise, :date, :set_number, :weight, :reps)';
+    (:user_id, :exercise, :date, :weight, :reps)';
     $statement = $db->prepare($query);
     $statement->bindValue(':user_id', $name);
     $statement->bindValue(':date', $date);
     $statement->bindValue(':exercise', $exercise);
-    $statement->bindValue(':set_number', $set_number);
     $statement->bindValue(':weight', $weight);
     $statement->bindValue(':reps', $reps);
     $statement->execute();
-    //$result = $statement->fetch(); // Fetch the result row
     $statement->closeCursor();
 }
 
 // Handle form submissions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $selectedExercise = 0;
-    if (isset($_POST["seeInfo"])) {
-        if (!empty($_POST["exercise"])) {
-            $selectedExercise = $_POST["exercise"];
-            $description = get_exercise_description($selectedExercise);
-            $muscles = get_exercise_muscles($selectedExercise);
-        }
-    } if (isset($_POST["addSet"])) {
-        $date = date("Y-m-d");
-        $exerciseName = 0;
-        if ($selectedExercise != 0) {
-            $exerciseName = $selectedExercise;
-        }
-        $exerciseName = $_POST["exercise"];
-        $weight = $_POST["weight"];
-        $reps = $_POST["num_reps"];
-        $date = $_POST["date"];
-        $set_number = $_POST["set_number"];
-        // You might want to add validation for $weight and $reps here
-        add_set($username, $exerciseName, $date, $set_number, $weight, $reps); // For simplicity, assuming set_number as 1
-    }
-}
+  $username = isset($_POST['username']) ? $_POST['username'] : $_GET['username'];
+
+  $selectedExercise = 0;
+  if (isset($_POST["seeInfo"])) {
+      if (!empty($_POST["exercise"])) {
+          $selectedExercise = $_POST["exercise"];
+          $description = get_exercise_description($selectedExercise);
+          $muscles = get_exercise_muscles($selectedExercise);
+      }
+  } elseif (isset($_POST["addSet"])) {
+      $date = date("Y-m-d");
+      $exerciseName = isset($_POST["exercise"]) ? $_POST["exercise"] : 0;
+      $weight = isset($_POST["weight"]) ? $_POST["weight"] : 0;
+      $reps = isset($_POST["num_reps"]) ? $_POST["num_reps"] : 0;
+      // You might want to add validation for $weight and $reps here
+      add_set($username, $exerciseName, $date, $weight, $reps); // For simplicity, assuming set_number as 1
+  }
+  if (!empty($_POST['Home'])) {
+      // Use the username from the form input value
+      $username = $_POST['username'];
+      header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
+      exit();
+  }
+} 
+else {
+  // If it's not a POST request, use the username from the GET data
+  $username = $_GET['username'];
+  }
 
 $exercises = get_exercise_names();
 ?>
@@ -103,7 +104,7 @@ $exercises = get_exercise_names();
       <label for="exercise">Select an exercise:</label>
       <select name="exercise" id="exercise">
         <?php foreach ($exercises as $exercise) : ?>
-          <option value="<?php echo $exercise['exercise_name']; ?>"><?php echo $exercise['exercise_name']; ?></option>
+          <option value="<?php echo $exercise['exercise_name']; ?>" <?php if(isset($selectedExercise) && $exercise['exercise_name'] == $selectedExercise) echo "selected"; ?>><?php echo $exercise['exercise_name']; ?></option>
         <?php endforeach; ?>
       </select>
       <input type="submit" name="seeInfo" value="See Exercise Information" class="btn" />
@@ -120,11 +121,19 @@ $exercises = get_exercise_names();
       <!-- Add input fields for adding sets -->
       <!-- You can use JavaScript to dynamically add more input fields for sets -->
       Date: <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" /> <br/>
-      Set Number: <input type="number" name="set_number"  /> <br/>
       Weight: <input type="number" name="weight"  /> <br/>
       Number of Reps: <input type="number" name="num_reps" /> <br/>
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />
       <input type="submit" name="addSet" value="Add Set" class="btn" />
     </form>
+
+    <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <!-- Use the username from PHP variable -->
+        <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
+        <input type="hidden" name="Home" value="true">
+        <input type="submit" value="Home" class="btn" />
+    </form>
+    
   </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

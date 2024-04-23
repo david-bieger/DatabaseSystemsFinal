@@ -2,18 +2,29 @@
 require("connect-db.php");
 require("database-functions.php");
 // echo "add Meals";
-//$username = $_GET['username'];
+// Initialize username variable
+$username = isset($_GET['username']) ? $_GET['username'] : 'David';
 
-$username = "David";
-function addMeal($username, $date, $meal_number, $calories, $carbs, $protein, $fat) {
+// Check if a form is submitted, and if so, update $username
+// if ($_SERVER["REQUEST_METHOD"] == "POST") {
+//   if (!empty($_POST['username'])) {
+//       $username = $_POST['username'];
+//   }
+// } else {
+//   // Check if the username is passed in the URL parameters
+//   if(isset($_GET['username'])) {
+//     $username = $_GET['username'];
+//   }
+// }
+
+function addMeal($username, $date, $calories, $carbs, $protein, $fat) {
     global $db;
-    $query = 'INSERT INTO Meal_History (user_id, date, meal_number, calories, carbs, protein, fat) 
+    $query = 'INSERT INTO Meal_History (user_id, date, calories, carbs, protein, fat) 
     VALUES 
-    (:user_id, :meal_date, :meal_number, :calories, :carbs, :protein, :fat)';
+    (:username, :meal_date, :calories, :carbs, :protein, :fat)';
     $statement = $db->prepare($query);
-    $statement->bindValue(':user_id', $username);
+    $statement->bindValue(':username', $username);
     $statement->bindValue(':meal_date', $date);
-    $statement->bindValue(':meal_number', $meal_number);
     $statement->bindValue(':calories', $calories);
     $statement->bindValue(':carbs', $carbs);
     $statement->bindValue(':protein', $protein);
@@ -27,18 +38,30 @@ function addMeal($username, $date, $meal_number, $calories, $carbs, $protein, $f
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['Submit'])) {
         $date = $_POST['date'];
-        $meal_number = $_POST['meal_number'];
         $calories = $_POST["calories"];
         $protein = $_POST["protein"];
         $fat = $_POST["fat"];
         $carbs = $_POST["carbohydrates"];
+        //$username = $_GET['username'];
 
-        addMeal($username, $date,  $meal_number, $calories, $carbs, $protein, $fat);
+        // if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //     if (!empty($_POST['username'])) {
+        //         $username = $_POST['username'];
+        //     }
+        // } else {
+        //     // Check if the username is passed in the URL parameters
+        //     if(isset($_GET['username'])) {
+        //       $username = $_GET['username'];
+        //     }
+        // }
+
+        addMeal($username, $date, $calories, $carbs, $protein, $fat);
         
     }
     if (!empty($_POST['Home'])) {
-        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
-        exit();
+      $username = $_POST['username'];
+      header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
+      exit();
     }
 }
 ?>
@@ -59,7 +82,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h1>Add Meals</h1>
     <form id="addMealForm" action="addMeals.php" method="post">
       Date: <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" /> <br/>
-      Meal Number: <input type="number" name="meal_number" required /> <br/>
       Calories: <input type="number" name="calories" required /> <br/>
       Carbohydrates (g): <input type="number" name="carbohydrates" required /> <br/>
       Protein (g): <input type="number" name="protein" required /> <br/>
@@ -67,8 +89,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <input type="submit" name="Submit" value="Submit" class="btn" />
     </form>
 
-    <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <input type="hidden" name="Home" value="true">
+    <form id="home" action="http://localhost/cs4750/DatabaseSystemsFinal/home.php" method="get">
+        <!-- Pass the username as a query parameter -->
+        <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
         <input type="submit" value="Home" class="btn" />
     </form>
 
