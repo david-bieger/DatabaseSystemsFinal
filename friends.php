@@ -49,7 +49,7 @@ function addRequest($user_id1, $user_id2) {
     VALUES 
     (:user_id1, :user_id2)';
     $statement = $db->prepare($query);
-    $statement->bindValue(':user_id1', $username);
+    $statement->bindValue(':user_id1', $user_id1);
     $statement->bindValue(':user_id2', $user_id2);
     $statement->execute();
     $statement->closeCursor();
