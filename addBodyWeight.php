@@ -33,6 +33,7 @@ function addBodyWeight($username, $date, $weight) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['Submit'])) {
+        $username = $_POST['username'];
         $date = $_POST['date'];
         $weight = $_POST["weight"];
         //$username = $_GET['username'];
@@ -73,9 +74,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>  
   <div>  
     <h1>Add Body Weight</h1>
-    <form id="addWeightForm" action="addBodyWeight.php" method="post">
+    <form id="addWeightForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
       Date: <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" /> <br/>
       Weight: <input type="number" name="weight" required /> <br/>
+      <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
       <input type="submit" name="Submit" value="Submit" class="btn" />
     </form>
 
