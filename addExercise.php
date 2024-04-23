@@ -100,12 +100,12 @@ $exercises = get_exercise_names();
 <body>  
   <div>  
     <h1>Add Exercise</h1>
-    <form id="addExerciseForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">     
+    <form id="addExerciseForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">     
       <label for="exercise">Select an exercise:</label>
       <select name="exercise" id="exercise">
-        <?php foreach ($exercises as $exercise) : ?>
-          <option value="<?php echo $exercise['exercise_name']; ?>" <?php if(isset($selectedExercise) && $exercise['exercise_name'] == $selectedExercise) echo "selected"; ?>><?php echo $exercise['exercise_name']; ?></option>
-        <?php endforeach; ?>
+          <?php foreach ($exercises as $exercise) : ?>
+              <option value="<?php echo $exercise['exercise_name']; ?>" <?php if(isset($selectedExercise) && $exercise['exercise_name'] == $selectedExercise) echo "selected"; ?>><?php echo $exercise['exercise_name']; ?></option>
+          <?php endforeach; ?>
       </select>
       <input type="submit" name="seeInfo" value="See Exercise Information" class="btn" />
       <br>
@@ -126,6 +126,7 @@ $exercises = get_exercise_names();
       <input type="hidden" name="username" value="<?php echo $username; ?>" />
       <input type="submit" name="addSet" value="Add Set" class="btn" />
     </form>
+
 
     <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <!-- Use the username from PHP variable -->

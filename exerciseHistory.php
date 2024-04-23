@@ -10,6 +10,7 @@ $username = ""; // Initialize username variable
 // Check if a filter is applied
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['exercise'])) {
     $filterExercise = $_POST['exercise'];
+    $username = $_POST['username'];
 }
 
 // Check if a delete request is made
@@ -64,7 +65,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>  
   <div>  
     <h1>Exercise History</h1>
-    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
       <label for="exercise">Filter Exercises:</label>
       <select name="exercise" id="exercise">
         <option value="">All Exercises</option>
@@ -84,6 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ?>
       </select>
       <input type="submit" value="Apply Filter" class="btn" />
+      <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
     </form>
     <?php if (count($exercises) > 0): ?>
     <table class="table">
