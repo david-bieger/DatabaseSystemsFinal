@@ -5,18 +5,86 @@ require("database-functions.php");
 
 // Assuming you get the user ID from the URL parameter
 // Initialize username variable
-$username = "";
+$username = isset($_GET['username']) ? $_GET['username'] : 'David';
 
-// Check if a form is submitted, and if so, update $username
+function addRequest($user_id1, $user_id2) {
+    global $db;
+    $query = 'INSERT INTO friend_requests (user_id1, user_id2) 
+    VALUES 
+    (:user_id1, :user_id2)';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':user_id1', $user_id1);
+    $statement->bindValue(':user_id2', $user_id2);
+    $statement->execute();
+    $statement->closeCursor();
+}
+
+function validateRequest($user_id1, $user_id2) {
+    //Reject when you are already friends (1)
+    //or when a request is active (2)
+    //or when the user isn't a user (3)
+    global $db;
+    $query1 = 'SELECT * FROM friends 
+    WHERE ((user_id1 = :user_id1 AND user_id2 = :user_id2)
+    OR (user_id2 = :user_id1 AND user_id1 = :user_id2))';
+    $statement1 = $db->prepare($query1);
+    $statement1->bindValue(':user_id1', $user_id1);
+    $statement1->bindValue(':user_id2', $user_id2);
+    $statement1->execute();
+    $result1 = $statement1->fetch(); // Fetch the result row
+    $statement1->closeCursor();
+    // Check if a row was returned
+    if ($result1) {
+        return 1;
+    }
+    $query2 = 'SELECT * FROM friend_requests 
+    WHERE ((user_id1 = :user_id1 AND user_id2 = :user_id2)
+    OR (user_id2 = :user_id1 AND user_id1 = :user_id2))';
+    $statement2 = $db->prepare($query2);
+    $statement2->bindValue(':user_id1', $user_id1);
+    $statement2->bindValue(':user_id2', $user_id2);
+    $statement2->execute();
+    $result2 = $statement2->fetch(); // Fetch the result row
+    $statement2->closeCursor();    
+    if ($result2) {
+        return 2;
+    }
+    $query3 = 'SELECT * FROM Users WHERE user_id = :user_id2';
+    $statement3 = $db->prepare($query3);
+    $statement3->bindValue(':user_id2', $user_id2);
+    $statement3->execute();
+    $result3 = $statement3->fetch(); // Fetch the result row
+    $statement3->closeCursor();    
+    if (!$result3) {
+        return 3;
+    }
+    return 0; // User not found or password doesn't match
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (!empty($_POST['username'])) {
+    if (!empty($_POST['Submit'])) {
+        $username = $_POST['username'];
+        $user_id2 = $_POST['user_id2'];
+        $flag = validateRequest($username, $user_id2);
+        if($flag == 0){
+            echo "Request sent!";
+            addRequest($username, $user_id2);
+        }
+        if($flag == 1){
+            echo "You are already friends with this user";
+        }
+        if($flag == 2){
+            echo "You already have an active request with this user";
+        }
+        if($flag == 3){
+            echo "The user could not be found";
+        }
+    }
+    if (!empty($_POST['Home'])) {
       $username = $_POST['username'];
-  }
-} else {
-  // Check if the username is passed in the URL parameters
-  if(isset($_GET['username'])) {
-    $username = $_GET['username'];
-  }
+      header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
+      exit();
+    }
 }
 
 $query = "SELECT * FROM (friends JOIN Users ON friends.user_id2 = Users.user_id) WHERE user_id1 = :user_id1";
@@ -43,32 +111,6 @@ $statement3->execute();
 $requests = $statement3->fetchAll(PDO::FETCH_ASSOC);
 $statement3->closeCursor();
 
-function addRequest($user_id1, $user_id2) {
-    global $db;
-    $query = 'INSERT INTO friend_requests (user_id1, user_id2) 
-    VALUES 
-    (:user_id1, :user_id2)';
-    $statement = $db->prepare($query);
-    $statement->bindValue(':user_id1', $user_id1);
-    $statement->bindValue(':user_id2', $user_id2);
-    $statement->execute();
-    $statement->closeCursor();
-}
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    
-    if (!empty($_POST['Submit'])) {
-        $username = $_POST['username'];
-        $user_id2 = $_POST["request_id"];
-        addRequest($username, $user_id2);
-    }
-
-    if (!empty($_POST['Home'])) {
-        $username = $_POST['username'];
-        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
-        exit();
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -142,9 +184,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <p>No requests found for this user.</p>
     <?php endif; ?>
     <h1>Send Friend Request</h1>
-    <form id="sendRequestForm" action="friends.php" method="post">
-      Friend's Username: <input type="text" name="request_id" required /> <br/>
+    <form id="addRequestForm" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
+      Friend's Username: <input type="text" name="user_id2" required /> <br/>
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />
       <input type="submit" name="Submit" value="Submit" class="btn" />
+    </form>
+    <form id="home" action="http://localhost/cs4750/DatabaseSystemsFinal/home.php" method="get">
+        <!-- Pass the username as a query parameter -->
+        <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
+        <input type="submit" value="Home" class="btn" />
     </form>
     <form id="home" action="http://localhost/cs4750/DatabaseSystemsFinal/home.php" method="get">
         <!-- Pass the username as a query parameter -->
