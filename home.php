@@ -32,6 +32,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Redirect to addMeals.php
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/addMeals.php?username=$username");
         exit;
+    } elseif (isset($_POST['addWeight'])) {
+      $username = $_POST['username'];
+        // Redirect to friends.php
+        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/addBodyWeight.php?username=$username");
+        exit;
+    } elseif (isset($_POST['seeWeight'])) {
+      $username = $_POST['username'];
+        // Redirect to friends.php
+        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/bodyWeightHistory.php?username=$username");
+        exit;
     } elseif (isset($_POST['friends'])) {
       $username = $_POST['username'];
         // Redirect to friends.php
@@ -74,6 +84,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form id="addMeals" action="home.php" method="post">   
       <input type="hidden" name="username" value="<?php echo $username; ?>" />  
       <input type="submit" name="addMeals" value="Add Meals" class="btn" />
+    </form>
+    <form id="addBodyWeight" action="home.php" method="post">  
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />   
+      <input type="submit" name="addWeight" value="Add Body Weight" class="btn" />
+    </form>
+    <form id="seeBodyWeight" action="home.php" method="post">  
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />   
+      <input type="submit" name="seeWeight" value="Body Weight History" class="btn" />
     </form>
     <form id="friends" action="home.php" method="post">  
       <input type="hidden" name="username" value="<?php echo $username; ?>" />   
