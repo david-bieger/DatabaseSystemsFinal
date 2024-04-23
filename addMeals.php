@@ -3,27 +3,27 @@ require("connect-db.php");
 require("database-functions.php");
 // echo "add Meals";
 // Initialize username variable
-$username = "";
+$username = isset($_GET['username']) ? $_GET['username'] : 'David';
 
 // Check if a form is submitted, and if so, update $username
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (!empty($_POST['username'])) {
-      $username = $_POST['username'];
-  }
-} else {
-  // Check if the username is passed in the URL parameters
-  if(isset($_GET['username'])) {
-    $username = $_GET['username'];
-  }
-}
+// if ($_SERVER["REQUEST_METHOD"] == "POST") {
+//   if (!empty($_POST['username'])) {
+//       $username = $_POST['username'];
+//   }
+// } else {
+//   // Check if the username is passed in the URL parameters
+//   if(isset($_GET['username'])) {
+//     $username = $_GET['username'];
+//   }
+// }
 
 function addMeal($username, $date, $calories, $carbs, $protein, $fat) {
     global $db;
     $query = 'INSERT INTO Meal_History (user_id, date, calories, carbs, protein, fat) 
     VALUES 
-    (:user_id, :meal_date, :calories, :carbs, :protein, :fat)';
+    (:username, :meal_date, :calories, :carbs, :protein, :fat)';
     $statement = $db->prepare($query);
-    $statement->bindValue(':user_id', $username);
+    $statement->bindValue(':username', $username);
     $statement->bindValue(':meal_date', $date);
     $statement->bindValue(':calories', $calories);
     $statement->bindValue(':carbs', $carbs);
@@ -42,6 +42,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $protein = $_POST["protein"];
         $fat = $_POST["fat"];
         $carbs = $_POST["carbohydrates"];
+        //$username = $_GET['username'];
+
+        // if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        //     if (!empty($_POST['username'])) {
+        //         $username = $_POST['username'];
+        //     }
+        // } else {
+        //     // Check if the username is passed in the URL parameters
+        //     if(isset($_GET['username'])) {
+        //       $username = $_GET['username'];
+        //     }
+        // }
 
         addMeal($username, $date, $calories, $carbs, $protein, $fat);
         
