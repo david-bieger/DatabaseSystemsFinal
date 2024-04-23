@@ -118,8 +118,6 @@ $exercises = get_exercise_names();
       <label for="muscle">Muscle(s) Targeted:</label>
       <textarea id="muscle" name="muscle" readonly><?php if (isset($muscles)) echo $muscles['muscle']; ?></textarea>
       <br>
-      <!-- Add input fields for adding sets -->
-      <!-- You can use JavaScript to dynamically add more input fields for sets -->
       Date: <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" /> <br/>
       Weight: <input type="number" name="weight"  /> <br/>
       Number of Reps: <input type="number" name="num_reps" /> <br/>
@@ -129,7 +127,6 @@ $exercises = get_exercise_names();
 
 
     <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-        <!-- Use the username from PHP variable -->
         <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
         <input type="hidden" name="Home" value="true">
         <input type="submit" value="Home" class="btn" />
