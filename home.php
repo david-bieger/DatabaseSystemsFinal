@@ -77,13 +77,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <input type="hidden" name="username" value="<?php echo $username; ?>" />     
       <input type="submit" name="seeExercises" value="Exercise History" class="btn" />
     </form>
-    <form id="mealHistory" action="home.php" method="post"> 
-      <input type="hidden" name="username" value="<?php echo $username; ?>" />    
-      <input type="submit" name="mealHistory" value="Meal History" class="btn" />
-    </form>
     <form id="addMeals" action="home.php" method="post">   
       <input type="hidden" name="username" value="<?php echo $username; ?>" />  
       <input type="submit" name="addMeals" value="Add Meals" class="btn" />
+    </form>
+    <form id="mealHistory" action="home.php" method="post"> 
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />    
+      <input type="submit" name="mealHistory" value="Meal History" class="btn" />
     </form>
     <form id="addBodyWeight" action="home.php" method="post">  
       <input type="hidden" name="username" value="<?php echo $username; ?>" />   
