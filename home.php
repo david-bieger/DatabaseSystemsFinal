@@ -47,6 +47,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Redirect to friends.php
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/friends.php?username=$username");
         exit;
+    } elseif (isset($_POST['logout'])) {
+      $username = $_POST['username'];
+        // Redirect to friends.php
+        header("Location: http://localhost/cs4750/DatabaseSystemsFinal/login.php");
+        exit;
     }
 }
 ?>
@@ -96,6 +101,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form id="friends" action="home.php" method="post">  
       <input type="hidden" name="username" value="<?php echo $username; ?>" />   
       <input type="submit" name="friends" value="Friends" class="btn" />
+    </form>
+    <form id="logout" action="home.php" method="post">  
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />   
+      <input type="submit" name="logout" value="Log Out" class="btn" />
     </form>
   </div>
 
