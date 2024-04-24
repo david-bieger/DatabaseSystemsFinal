@@ -63,6 +63,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit;
     }
 }
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+  if (!empty($_POST['Home'])) {
+      $username = $_POST['username'];
+      header("Location: http://localhost/cs4750/DatabaseSystemsFinal/home.php?username=$username");
+      exit();
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -95,7 +103,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </tr>
       </thead>
       <tbody>
-        <?php foreach (array("Bench", "Squat", "Deadlift") as $exercise) : ?>
+        <?php foreach (array("Bench Press", "Squat", "Deadlift") as $exercise) : ?>
           <?php $goal_exists = false; ?>
           <?php foreach ($user_goals as $goal) : ?>
             <?php if ($goal['exercise'] === $exercise) : ?>
