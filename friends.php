@@ -61,6 +61,39 @@ function validateRequest($user_id1, $user_id2) {
     return 0; // User not found or password doesn't match
 }
 
+function acceptRequest($user_id1, $user_id2) {
+    global $db;
+    $query = 'INSERT INTO friends (user_id1, user_id2) 
+    VALUES 
+    (:user_id1, :user_id2)';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':user_id1', $user_id1);
+    $statement->bindValue(':user_id2', $user_id2);
+    $statement->execute();
+    $statement->closeCursor();
+    // Once accepted, delete the request
+    $query_delete = 'DELETE FROM friend_requests 
+    WHERE (user_id1 = :user_id1 AND user_id2 = :user_id2)
+    OR (user_id1 = :user_id2 AND user_id2 = :user_id1)';
+    $statement_delete = $db->prepare($query_delete);
+    $statement_delete->bindValue(':user_id1', $user_id1);
+    $statement_delete->bindValue(':user_id2', $user_id2);
+    $statement_delete->execute();
+    $statement_delete->closeCursor();
+}
+
+function declineRequest($user_id1, $user_id2) {
+    global $db;
+    $query = 'DELETE FROM friend_requests 
+    WHERE (user_id1 = :user_id1 AND user_id2 = :user_id2)
+    OR (user_id1 = :user_id2 AND user_id2 = :user_id1)';
+    $statement = $db->prepare($query);
+    $statement->bindValue(':user_id1', $user_id1);
+    $statement->bindValue(':user_id2', $user_id2);
+    $statement->execute();
+    $statement->closeCursor();
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!empty($_POST['Submit'])) {
         $username = $_POST['username'];
@@ -79,6 +112,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if($flag == 3){
             echo "The user could not be found";
         }
+    }
+    if (!empty($_POST['accept'])) {
+        $user_id1 = $_POST['accept'];
+        acceptRequest($user_id1, $username);
+        echo "Friend request accepted!";
+    }
+    if (!empty($_POST['decline'])) {
+        $user_id1 = $_POST['decline'];
+        declineRequest($user_id1, $username);
+        echo "Friend request declined!";
     }
     if (!empty($_POST['Home'])) {
       $username = $_POST['username'];
@@ -167,7 +210,8 @@ $statement3->closeCursor();
     <table class="table">
       <thead>
         <tr>
-          <th></th>
+          <th>Friend</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -175,6 +219,14 @@ $statement3->closeCursor();
         <tr>
           <td><?php echo $request['user_id1']; ?></td>
           <td>
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
+              <input type="hidden" name="accept" value="<?php echo $request['user_id1']; ?>">
+              <button type="submit" class="btn btn-success">Accept</button>
+            </form>
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
+              <input type="hidden" name="decline" value="<?php echo $request['user_id1']; ?>">
+              <button type="submit" class="btn btn-danger">Decline</button>
+            </form>
           </td>
         </tr>
         <?php endforeach; ?>
@@ -197,4 +249,5 @@ $statement3->closeCursor();
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    
+</body>
+</html>
