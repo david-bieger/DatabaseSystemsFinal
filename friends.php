@@ -193,13 +193,7 @@ $statement3->closeCursor();
         <!-- Pass the username as a query parameter -->
         <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
         <input type="submit" value="Home" class="btn" />
-    </form>
-    <form id="home" action="http://localhost/cs4750/DatabaseSystemsFinal/home.php" method="get">
-        <!-- Pass the username as a query parameter -->
-        <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
-        <input type="submit" value="Home" class="btn" />
-    </form>
-    
+    </form>    
     </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
