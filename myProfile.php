@@ -13,7 +13,7 @@ $user = $statement->fetch(PDO::FETCH_ASSOC);
 $statement->closeCursor();
 
 // Retrieve user's goals from the database
-$query_goals = 'SELECT * FROM User_goals WHERE user_id = :user_id AND exercise IN ("Bench", "Squat", "Deadlift")';
+$query_goals = 'SELECT * FROM User_goals WHERE user_id = :user_id AND exercise IN ("Bench Press", "Squat", "Deadlift")';
 $statement_goals = $db->prepare($query_goals);
 $statement_goals->bindValue(':user_id', $username);
 $statement_goals->execute();
