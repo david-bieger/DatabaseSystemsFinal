@@ -82,11 +82,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <title>My Profile - <?php echo $username; ?></title> 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">  
   <link rel="stylesheet" href="styles.css" /> 
+  <style>
+    /* Hide the "Add Goal" form by default */
+    #addGoalForm {
+      display: none;
+    }
+  </style>
 </head>
 <body>  
   <div>  
     <h1>My Profile - <?php echo $username; ?></h1>
     <h2>1 Rep Maxes:</h2>
+    <!-- Form to update 1 rep maxes -->
     <form id="editMaxesForm" action="myprofile.php?username=<?php echo $username; ?>" method="post">     
       Squat Max: <input type="number" name="squat_max" value="<?php echo $user['squat_max']; ?>" required /> <br/>
       Bench Max: <input type="number" name="bench_max" value="<?php echo $user['bench_max']; ?>" required /> <br/> 
@@ -94,12 +101,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       <input type="submit" name="submit" value="Save Changes" class="btn" />
     </form>
     <h2>Goals:</h2>
+    <!-- Goals table -->
     <table class="table">
       <thead>
         <tr>
           <th>Exercise</th>
           <th>Goal Value</th>
           <th>Target Date</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody>
@@ -107,30 +116,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           <?php $goal_exists = false; ?>
           <?php foreach ($user_goals as $goal) : ?>
             <?php if ($goal['exercise'] === $exercise) : ?>
+              <!-- Display existing goal -->
               <tr>
                 <td><?php echo $goal['exercise']; ?></td>
                 <td><?php echo $goal['goal_value']; ?></td>
                 <td><?php echo $goal['target_date']; ?></td>
+                <td>
+                  <!-- "Update" button to toggle "Add Goal" form -->
+                  <button type="button" class="btn btn-primary btn-sm" onclick="toggleAddGoalForm('<?php echo $exercise; ?>')">Update</button>
+                </td>
               </tr>
               <?php $goal_exists = true; ?>
             <?php endif; ?>
           <?php endforeach; ?>
           <?php if (!$goal_exists) : ?>
+            <!-- Display "Add Goal" form -->
             <tr>
               <td><?php echo $exercise; ?></td>
               <td colspan="2">
-                <form id="addGoalForm" action="myprofile.php?username=<?php echo $username; ?>" method="post">
+                <form id="addGoalForm_<?php echo $exercise; ?>" action="myprofile.php?username=<?php echo $username; ?>" method="post">
                   <input type="hidden" name="exercise" value="<?php echo $exercise; ?>" />
                   Goal Value: <input type="number" name="goal_value" required /> 
                   Target Date: <input type="date" name="target_date" required />
                   <input type="submit" name="submit_goal" value="Set Goal" class="btn" />
                 </form>
               </td>
+              <td></td>
             </tr>
           <?php endif; ?>
         <?php endforeach; ?>
       </tbody>
     </table>
+    <!-- Form to navigate to the home page -->
     <form id="home" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
         <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
         <input type="hidden" name="Home" value="true">
@@ -138,4 +155,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </form>
   </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg
+  <script>
+    // JavaScript function to toggle visibility of "Add Goal" form
+    function toggleAddGoalForm(exercise) {
+        var formId = "addGoalForm_" + exercise; // Generate form ID
+        var addGoalForm = document.getElementById(formId); // Get form element
+        if (addGoalForm.style.display === "none" || addGoalForm.style.display === "") {
+            addGoalForm.style.display = "table-row"; // Show the form
+        } else {
+            addGoalForm.style.display = "none"; // Hide the form
+        }
+    }
+  </script>
+
+
+  <!-- Bootstrap JS bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg"></script>
+</body>
+</html>
