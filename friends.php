@@ -211,7 +211,8 @@ $statement3->closeCursor();
       <thead>
         <tr>
           <th>Friend</th>
-          <th>Action</th>
+          <th>Accept</th>
+          <th>Decline</th>
         </tr>
       </thead>
       <tbody>
@@ -221,17 +222,20 @@ $statement3->closeCursor();
           <td>
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
               <input type="hidden" name="accept" value="<?php echo $request['user_id1']; ?>">
-              <button type="submit" class="btn btn-success">Accept</button>
+              <button type="submit" class="btn btn-success btn-block">Accept</button>
             </form>
+          </td>
+          <td> <!-- New column for Decline button -->
             <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
               <input type="hidden" name="decline" value="<?php echo $request['user_id1']; ?>">
-              <button type="submit" class="btn btn-danger">Decline</button>
+              <button type="submit" class="btn btn-danger btn-block">Decline</button>
             </form>
           </td>
         </tr>
         <?php endforeach; ?>
       </tbody>
     </table>
+
     <?php else: ?>
     <p>No requests found for this user.</p>
     <?php endif; ?>
