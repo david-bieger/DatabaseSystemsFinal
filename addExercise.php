@@ -53,6 +53,18 @@ function add_set($name, $exercise, $date, $weight, $reps) {
     $statement->closeCursor();
 }
 
+function add_favorite($name, $exercise) {
+  global $db;
+  $query = 'INSERT INTO Favorite_Exercises (user_id, exercise_name) 
+  VALUES 
+  (:user_id, :exercise)';
+  $statement = $db->prepare($query);
+  $statement->bindValue(':user_id', $name);
+  $statement->bindValue(':exercise', $exercise);
+  $statement->execute();
+  $statement->closeCursor();
+}
+
 // Handle form submissions
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   $username = isset($_POST['username']) ? $_POST['username'] : $_GET['username'];
@@ -64,6 +76,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           $description = get_exercise_description($selectedExercise);
           $muscles = get_exercise_muscles($selectedExercise);
       }
+  } elseif (isset($_POST["favorite"])) {
+      $exerciseName = isset($_POST["exercise"]) ? $_POST["exercise"] : 0;
+      $username = $_POST['username'];
+      add_favorite($username, $exerciseName);
   } elseif (isset($_POST["addSet"])) {
       $date = date("Y-m-d");
       $exerciseName = isset($_POST["exercise"]) ? $_POST["exercise"] : 0;
@@ -107,6 +123,8 @@ $exercises = get_exercise_names();
               <option value="<?php echo $exercise['exercise_name']; ?>" <?php if(isset($selectedExercise) && $exercise['exercise_name'] == $selectedExercise) echo "selected"; ?>><?php echo $exercise['exercise_name']; ?></option>
           <?php endforeach; ?>
       </select>
+      <input type="submit" name="favorite" value="Add To Favorites" class="btn" />
+      <br>
       <input type="submit" name="seeInfo" value="See Exercise Information" class="btn" />
       <br>
       <label for="exercise">Exercise Name:</label>
