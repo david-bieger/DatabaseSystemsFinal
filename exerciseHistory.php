@@ -27,17 +27,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['set_number'])) {
 // Fetch username from GET or POST data
 $username = isset($_POST['username']) ? $_POST['username'] : $_GET['username'];
 
-$query = "SELECT * FROM Exercise_History WHERE user_id = :user_id";
+$query = "SELECT * FROM Exercise_History";
 // Add WHERE clause if a filter is applied
 if (!empty($filterExercise)) {
-    $query .= " AND exercise = :exercise";
+    if ($filterExercise == "Favorites") {
+      $query .= " JOIN Favorite_Exercises ON Favorite_Exercises.user_id = Exercise_History.user_id AND Favorite_Exercises.exercise_name = Exercise_History.exercise WHERE Favorite_Exercises.user_id = :user_id";
+    } else {
+      $query .= " WHERE user_id = :user_id AND exercise = :exercise";
+    }
+}
+else{
+  $query .=  " WHERE user_id = :user_id";
 }
 
 $query .= " ORDER BY date DESC";
 $statement = $db->prepare($query);
 $statement->bindValue(':user_id', $username);
 // Bind filter parameter if a filter is applied
-if (!empty($filterExercise)) {
+if (!empty($filterExercise) && $filterExercise !== "Favorites") {
     $statement->bindValue(':exercise', $filterExercise);
 }
 $statement->execute();
@@ -67,26 +74,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <div>  
     <h1>Exercise History</h1>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
-      <label for="exercise">Filter Exercises:</label>
-      <select name="exercise" id="exercise">
-        <option value="">All Exercises</option>
-        <?php
-        // Fetch distinct exercise names from the database
-        $query = "SELECT DISTINCT exercise FROM Exercise_History";
-        $statement = $db->prepare($query);
-        $statement->execute();
-        $exerciseNames = $statement->fetchAll(PDO::FETCH_COLUMN);
-        $statement->closeCursor();
+        <label for="exercise">Filter Exercises:</label>
+        <select name="exercise" id="exercise">
+            <option value="">All Exercises</option>
+            <option value="Favorites" <?php if ($filterExercise == "Favorites") echo "selected"; ?>>Favorites</option>
+            <?php
+            // Fetch distinct exercise names from the database
+            $query = "SELECT DISTINCT exercise FROM Exercise_History";
+            $statement = $db->prepare($query);
+            $statement->execute();
+            $exerciseNames = $statement->fetchAll(PDO::FETCH_COLUMN);
+            $statement->closeCursor();
 
-        // Display dropdown options
-        foreach ($exerciseNames as $exerciseName) {
-            $selected = ($filterExercise == $exerciseName) ? 'selected' : '';
-            echo "<option value='$exerciseName' $selected>$exerciseName</option>";
-        }
-        ?>
-      </select>
-      <input type="submit" value="Apply Filter" class="btn" />
-      <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
+            // Display dropdown options
+            foreach ($exerciseNames as $exerciseName) {
+                $selected = ($filterExercise == $exerciseName) ? 'selected' : '';
+                echo "<option value='$exerciseName' $selected>$exerciseName</option>";
+            }
+            ?>
+        </select>
+        <input type="submit" value="Apply Filter" class="btn" />
+        <input type="hidden" name="username" value="<?php echo $username; ?>" /> 
     </form>
     <?php if (count($exercises) > 0): ?>
     <table class="table">
