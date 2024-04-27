@@ -2,7 +2,11 @@
 require("connect-db.php");
 require("database-functions.php");
 
-$username = $_GET['username'];
+// Initialize variables
+$username = ""; // Initialize username variable
+
+// Fetch username from GET or POST data
+$username = isset($_POST['username']) ? $_POST['username'] : $_GET['username'];
 
 // Retrieve user's information from the database
 $query = 'SELECT * FROM Users WHERE user_id = :user_id';
@@ -41,12 +45,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         header("Location: myprofile.php?username=$username");
         exit;
     }
+    // Handle delete
+    if (isset($_POST['exercise'])){
+      $exercise = $_POST['exercise'];
+      $username = $_POST['username'];
+      
+      $query = "DELETE FROM User_goals WHERE exercise = :exercise AND user_id = :user_id";
+      $statement = $db->prepare($query);
+      $statement->bindValue(':exercise', $exercise);
+      $statement->bindValue(':user_id', $username);
+      $statement->execute();
+
+      // Redirect back to the profile page after updating
+      header("Location: myprofile.php?username=$username");
+    }
 
     // Handle goal submission
-    if (!empty($_POST['submit_goal'])) {
+    if (isset($_POST['submit_goal'])) {
         $exercise = $_POST['exercise'];
         $goal_value = $_POST['goal_value'];
         $target_date = $_POST['target_date'];
+        $username = $_POST['username'];
 
         // Insert the new goal into the database
         $query_insert_goal = 'INSERT INTO User_goals (user_id, exercise, goal_value, target_date) VALUES (:user_id, :exercise, :goal_value, :target_date)';
@@ -98,6 +117,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
       Squat Max: <input type="number" name="squat_max" value="<?php echo $user['squat_max']; ?>" required /> <br/>
       Bench Max: <input type="number" name="bench_max" value="<?php echo $user['bench_max']; ?>" required /> <br/> 
       Deadlift Max: <input type="number" name="dl_max" value="<?php echo $user['dl_max']; ?>" required /> <br/> 
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />
       <input type="submit" name="submit" value="Save Changes" class="btn" />
     </form>
     <h2>Goals:</h2>
@@ -122,8 +142,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <td><?php echo $goal['goal_value']; ?></td>
                 <td><?php echo $goal['target_date']; ?></td>
                 <td>
-                  <!-- "Update" button to toggle "Add Goal" form -->
-                  <button type="button" class="btn btn-primary btn-sm" onclick="toggleAddGoalForm('<?php echo $exercise; ?>')">Update</button>
+                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>?username=<?php echo $username; ?>" method="post">
+                    <input type="hidden" name="exercise" value="<?php echo $exercise; ?>">
+                    <input type="hidden" name="username" value="<?php echo $username; ?>" />
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
                 </td>
               </tr>
               <?php $goal_exists = true; ?>
@@ -136,6 +159,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
               <td colspan="2">
                 <form id="addGoalForm_<?php echo $exercise; ?>" action="myprofile.php?username=<?php echo $username; ?>" method="post">
                   <input type="hidden" name="exercise" value="<?php echo $exercise; ?>" />
+                  <input type="hidden" name="username" value="<?php echo $username; ?>" />
                   Goal Value: <input type="number" name="goal_value" required /> 
                   Target Date: <input type="date" name="target_date" required />
                   <input type="submit" name="submit_goal" value="Set Goal" class="btn" />
@@ -154,19 +178,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="submit" value="Home" class="btn" />
     </form>
   </div>
-
-  <script>
-    // JavaScript function to toggle visibility of "Add Goal" form
-    function toggleAddGoalForm(exercise) {
-        var formId = "addGoalForm_" + exercise; // Generate form ID
-        var addGoalForm = document.getElementById(formId); // Get form element
-        if (addGoalForm.style.display === "none" || addGoalForm.style.display === "") {
-            addGoalForm.style.display = "table-row"; // Show the form
-        } else {
-            addGoalForm.style.display = "none"; // Hide the form
-        }
-    }
-  </script>
 
 
   <!-- Bootstrap JS bundle -->
