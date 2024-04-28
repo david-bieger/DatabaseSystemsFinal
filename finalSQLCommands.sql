@@ -113,13 +113,13 @@ CREATE TABLE IF NOT EXISTS Max_History (
 );
 
 -- Populate sample data into Users table
-INSERT INTO Users (user_id, password, name, DOB, squat_max, bench_max, dl_max) 
-VALUES 
-('1', 'password1', 'John Doe', '1990-05-15', 200, 180, 250),
-('2', 'password2', 'Jane Smith', '1992-09-20', 185, 160, 220),
-('3', 'password3', 'Alice Johnson', '1985-02-10', 220, 200, 280);
+--INSERT INTO Users (user_id, password, name, DOB, squat_max, bench_max, dl_max) 
+--VALUES 
+--('1', 'password1', 'John Doe', '1990-05-15', 200, 180, 250),
+--('2', 'password2', 'Jane Smith', '1992-09-20', 185, 160, 220),
+--('3', 'password3', 'Alice Johnson', '1985-02-10', 220, 200, 280);
 
--- Populate sample data into Exercises table
+-- Populate  data into Exercises table
 INSERT INTO Exercises (exercise_name, muscle, description) 
 VALUES 
 ('Squat', 'Quadriceps, Glutes, Hamstrings', 'The squat is a compound exercise that primarily targets the quadriceps, glutes, and hamstrings. It involves lowering the body into a seated position by bending the knees and hips, then returning to a standing position.'),
@@ -146,45 +146,37 @@ VALUES
 ('Calf Raises', 'Calves', 'Calf raises are an isolation exercise that primarily target the calf muscles. They involve raising the heels upwards while standing on the balls of the feet, typically with the assistance of a calf raise machine or platform.');
 
 -- Populate sample data into Exercise_History table
-INSERT INTO Exercise_History (user_id, exercise, date, set_number, weight, reps) 
-VALUES 
-('1', 'Squat', '2024-03-18', 1, 315, 8),
-('1', 'Squat', '2024-03-18', 2, 300, 8),
-('1', 'Squat', '2024-03-18', 3, 275, 6),
-('2', 'Bench Press', '2024-03-18', 1, 225, 10),
-('2', 'Bench Press', '2024-03-18', 2, 215, 10),
-('2', 'Bench Press', '2024-03-18', 3, 205, 10),
-('3', 'Deadlift', '2024-03-19', 1, 405, 5),
-('3', 'Deadlift', '2024-03-19', 2, 385, 6),
-('3', 'Deadlift', '2024-03-19', 3, 365, 7);
+--INSERT INTO Exercise_History (user_id, exercise, date, set_number, weight, reps) 
+--VALUES 
+--('1', 'Squat', '2024-03-18', 1, 315, 8),
+--('1', 'Squat', '2024-03-18', 2, 300, 8),
+--('1', 'Squat', '2024-03-18', 3, 275, 6),
+--('2', 'Bench Press', '2024-03-18', 1, 225, 10),
+--('2', 'Bench Press', '2024-03-18', 2, 215, 10),
+--('2', 'Bench Press', '2024-03-18', 3, 205, 10),
+--('3', 'Deadlift', '2024-03-19', 1, 405, 5),
+--('3', 'Deadlift', '2024-03-19', 2, 385, 6),
+--('3', 'Deadlift', '2024-03-19', 3, 365, 7);
 
 
 -- Populate sample data into Body_Weight_History table
-INSERT INTO Body_Weight_History (user_id, date, weight) 
-VALUES 
-('1', '2024-03-01', 130),
-('2', '2024-03-01', 200),
-('3', '2024-03-01', 160),
-('1', '2024-03-08', 135),
-('2', '2024-03-08', 195),
-('3', '2024-03-08', 165),
-('1', '2024-03-15', 140),
-('2', '2024-03-15', 190),
-('3', '2024-03-15', 170),
-('1', '2024-03-22', 145),
-('2', '2024-03-22', 185),
-('3', '2024-03-22', 160),
-('1', '2024-03-29', 150),
-('2', '2024-03-29', 180),
-('3', '2024-03-29', 165);
-
--- Populate sample data into Goals table
-INSERT INTO Goals (goal_type, exercise) 
-VALUES 
-('Strength', 'Squat'),
-('Endurance', 'Bench Press'),
-('Flexibility', 'Deadlift');
-
+--INSERT INTO Body_Weight_History (user_id, date, weight) 
+--VALUES 
+--('1', '2024-03-01', 130),
+--('2', '2024-03-01', 200),
+--('3', '2024-03-01', 160),
+--('1', '2024-03-08', 135),
+--('2', '2024-03-08', 195),
+--('3', '2024-03-08', 165),
+--('1', '2024-03-15', 140),
+--('2', '2024-03-15', 190),
+--('3', '2024-03-15', 170),
+--('1', '2024-03-22', 145),
+--('2', '2024-03-22', 185),
+--('3', '2024-03-22', 160),
+--('1', '2024-03-29', 150),
+--('2', '2024-03-29', 180),
+--('3', '2024-03-29', 165);
 
 -- Create Stored Procedure to calculate total macros consumed in a date so the user can see what they've eaten that day
 DELIMITER //
