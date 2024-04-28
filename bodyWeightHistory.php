@@ -63,7 +63,7 @@ $statement->closeCursor();
             <thead>
                 <tr>
                     <th>Date</th>
-                    <th>Weight (kg)</th>
+                    <th>Weight (lbs)</th>
                     <th>Delete</th>
                 </tr>
             </thead>
