@@ -30,6 +30,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $squatMax = $_POST["squat_max"];
         $benchMax = $_POST["bench_max"];
         $dlMax = $_POST["dl_max"];
+        $date = $_POST["date"];
 
         // Update user's 1 rep maxes in the database
         $query = 'UPDATE Users SET squat_max = :squat_max, bench_max = :bench_max, dl_max = :dl_max WHERE user_id = :user_id';
@@ -38,6 +39,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $statement->bindValue(':bench_max', $benchMax);
         $statement->bindValue(':dl_max', $dlMax);
         $statement->bindValue(':user_id', $username);
+        $statement->execute();
+        $statement->closeCursor();
+
+        //add maxes to the max history
+        $query = 'INSERT INTO Max_History (user_id, date, squat_max, bench_max, dl_max) 
+        VALUES 
+        (:username, :date, :squat_max, :bench_max, :dl_max)';
+        $statement = $db->prepare($query);
+        $statement->bindValue(':squat_max', $squatMax);
+        $statement->bindValue(':bench_max', $benchMax);
+        $statement->bindValue(':dl_max', $dlMax);
+        $statement->bindValue(':date', $date);
+        $statement->bindValue(':username', $username);
         $statement->execute();
         $statement->closeCursor();
 
@@ -114,6 +128,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h2>1 Rep Maxes:</h2>
     <!-- Form to update 1 rep maxes -->
     <form id="editMaxesForm" action="myprofile.php?username=<?php echo $username; ?>" method="post">     
+      Date: <input type="date" name="date" value="<?php echo date('Y-m-d'); ?>" required /> <br/> 
       Squat Max: <input type="number" name="squat_max" value="<?php echo $user['squat_max']; ?>" required /> <br/>
       Bench Max: <input type="number" name="bench_max" value="<?php echo $user['bench_max']; ?>" required /> <br/> 
       Deadlift Max: <input type="number" name="dl_max" value="<?php echo $user['dl_max']; ?>" required /> <br/> 

@@ -52,6 +52,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Redirect to friends.php
         header("Location: http://localhost/cs4750/DatabaseSystemsFinal/login.php");
         exit;
+    } elseif (isset($_POST['seeMaxes'])) {
+      $username = $_POST['username'];
+        // Redirect to friends.php
+      header("Location: http://localhost/cs4750/DatabaseSystemsFinal/maxHistory.php?username=$username");
+      exit;
     }
 }
 ?>
@@ -81,6 +86,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form id="seeExercises" action="home.php" method="post">
       <input type="hidden" name="username" value="<?php echo $username; ?>" />     
       <input type="submit" name="seeExercises" value="Exercise History" class="btn" />
+    </form>
+    <form id="seeMaxes" action="home.php" method="post">
+      <input type="hidden" name="username" value="<?php echo $username; ?>" />     
+      <input type="submit" name="seeMaxes" value="1 Rep Max History" class="btn" />
     </form>
     <form id="addMeals" action="home.php" method="post">   
       <input type="hidden" name="username" value="<?php echo $username; ?>" />  
