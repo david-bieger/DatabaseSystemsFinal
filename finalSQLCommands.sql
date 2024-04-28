@@ -186,19 +186,16 @@ VALUES
 ('Flexibility', 'Deadlift');
 
 
--- Create Stored Procedure to calculate average calories consumed per day by a user within a date range which will be made to a graph 
+-- Create Stored Procedure to calculate total macros consumed in a date so the user can see what they've eaten that day
 DELIMITER //
 
-CREATE PROCEDURE IF NOT EXISTS CalculateAverageCaloriesPerDay(
-    IN userId INT,
-    IN startDate DATE,
-    IN endDate DATE
-)
+CREATE PROCEDURE CalculateDailyMacros(IN userId VARCHAR(50))
 BEGIN
-    SELECT date, SUM(calories) AS calories
+    SELECT DISTINCT date, SUM(calories) AS totalCalories, SUM(carbs) AS totalCarbs, SUM(protein) AS totalProtein, SUM(fat) AS totalFat
     FROM Meal_History
-    WHERE user_id = userId AND date BETWEEN startDate AND endDate
-    GROUP BY date;
-END//
+    WHERE user_id = userId
+    GROUP BY date
+    ORDER BY date DESC;
+END;
 
 DELIMITER ;
