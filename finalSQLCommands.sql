@@ -101,6 +101,17 @@ CREATE TABLE IF NOT EXISTS friend_requests (
     PRIMARY KEY (user_id1, user_id2) -- Composite primary key
 );
 
+-- Create Max_History table
+CREATE TABLE IF NOT EXISTS Max_History (
+    user_id VARCHAR(50),
+    date DATE,
+    squat_max INT,
+    bench_max INT,
+    dl_max INT,
+    PRIMARY KEY (user_id, date),
+    FOREIGN KEY (user_id) REFERENCES Users(user_id)
+);
+
 -- Populate sample data into Users table
 INSERT INTO Users (user_id, password, name, DOB, squat_max, bench_max, dl_max) 
 VALUES 
